@@ -87,4 +87,43 @@ High-performance memory uses fast buses; low-power I/O uses simpler buses.
 - Core components: **CPU, memory hierarchy, peripherals, bus, debug, power, clock/reset**.  
 - BabySoC mirrors essential SoC blocks in a **small, open-source framework**.  
 - Functional modelling bridges **high-level specification and RTL**, enabling rapid validation and reusable verification frameworks.  
-- Building and simulating BabySoC with **Icarus Verilog + GTKWave** provides hands-on SoC design and verification experience.  
+- Building and simulating BabySoC with **Icarus Verilog + GTKWave** provides hands-on SoC design and verification experience.
+- 
+
+
+
+# 📝 My Simulation Inferences  
+
+## 🔹 Pre-Synthesis Simulation  
+
+- Validates the design at the **RTL (Register Transfer Level)**.  
+- Signals are simulated using **behavioral Verilog**, with no notion of actual physical hardware.  
+- The **OUT** signal shows **step-like transitions** that directly track the digital values from **`RV_TO_DAC[9:0]`** to the DAC.  
+- Confirms that the **functional logic is correct** and that the DAC model is responding properly.  
+
+✅ **In short:** Pre-synthesis checks design correctness in an **ideal, abstract form**.  
+
+---
+
+## 🔹 Post-Synthesis Simulation  
+
+- Runs on the **gate-level netlist** generated after synthesis.  
+- Even though the **OUT waveform looks similar** to the pre-synthesis result, the **process is completely different**.  
+- Now the signals pass through **gates, mapped cells, and timing delays** that reflect a real hardware implementation.  
+- The similarity of the output proves that synthesis **preserved the intended behavior**, while also introducing **hardware-accurate timing effects**.  
+
+✅ **In short:** Post-synthesis checks that the **hardware-mapped version** of the design still behaves the same as the RTL description.  
+
+---
+
+## 🔹 Key Understanding  
+
+Although the **outputs look the same**, the **verification stages are fundamentally different**:  
+
+| Stage             | What It Represents | Purpose |
+|-------------------|--------------------|---------|
+| **Pre-Synthesis** | RTL-level simulation (ideal, behavioral model). | Checks logical/functional correctness of the design. |
+| **Post-Synthesis** | Gate-level simulation (mapped cells + delays). | Checks that hardware implementation still preserves RTL behavior. |
+
+👉 **Conclusion:** The consistency of outputs across both simulations confirms that the design intent is preserved from RTL to gate-level — a critical step before moving to **place-and-route** and eventually **chip fabrication**.  
+
